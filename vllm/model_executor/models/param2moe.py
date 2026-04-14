@@ -226,8 +226,12 @@ class Param2MoEAttention(nn.Module):
 
         if self.use_qk_norm:
             T = q.shape[0]
-            q = self.q_layernorm(q.view(T, self.num_local_heads, self.head_dim)).view(T, self.q_size_local)
-            k = self.k_layernorm(k.view(T, self.num_local_kv_heads, self.head_dim)).view(T, self.kv_size_local)
+            q = self.q_layernorm(q.view(T, self.num_local_heads, self.head_dim)).view(
+                T, self.q_size_local
+            )
+            k = self.k_layernorm(
+                k.view(T, self.num_local_kv_heads, self.head_dim)
+            ).view(T, self.kv_size_local)
 
         q, k = self.rotary_emb(positions, q, k)
         attn_output = self.attn(q, k, v)
